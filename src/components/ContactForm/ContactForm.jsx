@@ -1,11 +1,12 @@
 import { FormControl, Input, InputLabel } from '@mui/material';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { add } from 'redux/contactsSlice';
+import { add } from 'redux/contacts/contactsSlice';
 import { Form, SubmitBtn } from './ContactForm.styled';
+import { addContact } from 'redux/contacts/contactsThunk';
 
 function ContactForm() {
-  const contacts = useSelector(state => state.contacts.contacts)
+  const contacts = useSelector(state => state.contacts.contacts);
   const dispatch = useDispatch();
   const validate = ({ name, number }) => {
     const errors = {};
@@ -36,7 +37,7 @@ function ContactForm() {
         alert(`${name} is already in your contacts`);
         return;
       }
-      dispatch(add({ name, number }));
+      dispatch(addContact({ name, number }));
       formik.resetForm();
     },
   });
