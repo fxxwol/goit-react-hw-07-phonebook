@@ -1,12 +1,12 @@
 import { FormControl, Input, InputLabel } from '@mui/material';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { add } from 'redux/contacts/contactsSlice';
 import { Form, SubmitBtn } from './ContactForm.styled';
 import { addContact } from 'redux/contacts/contactsThunk';
+import { SyncLoader } from 'react-spinners';
 
 function ContactForm() {
-  const contacts = useSelector(state => state.contacts.contacts);
+  const {contacts, isAdding} = useSelector(state => state.contacts);
   const dispatch = useDispatch();
   const validate = ({ name, number }) => {
     const errors = {};
@@ -72,7 +72,18 @@ function ContactForm() {
           onChange={formik.handleChange}
         />
       </FormControl>
-      <SubmitBtn type="submit">Add contact</SubmitBtn>
+      <SyncLoader
+        color={'#1976d2'}
+        size={8}
+        speedMultiplier={0.8}
+        loading={isAdding}
+        cssOverride={{marginLeft: '30px'}}
+      />
+      {!isAdding &&  (
+        <SubmitBtn type="submit" disabled={isAdding}>
+          Add contact
+        </SubmitBtn>
+      )}
     </Form>
   );
 }

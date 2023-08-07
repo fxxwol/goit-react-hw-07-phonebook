@@ -6,6 +6,9 @@ export const contactsSlice = createSlice({
     initialState: {
         contacts: [],
         isLoading: false,
+        isAdding: false,
+        isDeleting: false,
+        deletingId: null,
         error: null
     },
     reducers: {},
@@ -36,40 +39,47 @@ export const contactsSlice = createSlice({
             .addCase(addContact.fulfilled, (state, { payload }) => {
                 return {
                     ...state,
-                    contacts: [...state.contacts, payload]
+                    contacts: [...state.contacts, payload],
+                    isAdding: false,
                 }
 
             })
             .addCase(addContact.pending, (state, _) => {
                 return {
                     ...state,
+                    isAdding: true,
                     error: null
                 }
             })
             .addCase(addContact.rejected, (state, { payload }) => {
                 return {
                     ...state,
-                    error: payload
+                    error: payload,
+                    isAdding: false,
                 }
             })
             .addCase(deleteContact.fulfilled, (state, { payload }) => {
                 return {
                     ...state,
                     contacts: state.contacts.filter(({ id }) => id !== payload),
-
+                    isDeleting: false,
+                    deletingId: null
                 }
 
             })
-            .addCase(deleteContact.pending, (state, _) => {
+            .addCase(deleteContact.pending, (state, action) => {
                 return {
                     ...state,
-                    error: null
+                    error: null,
+                    isDeleting: true,
+                    deletingId: action.meta.arg
                 }
             })
             .addCase(deleteContact.rejected, (state, { payload }) => {
                 return {
                     ...state,
-                    error: payload
+                    error: payload,
+                    isDeleting: false,
                 }
             })
     }
